@@ -29,8 +29,8 @@
 
 ### 1️⃣ Склонируйте репозиторий
 ```bash
-git clone <URL_вашего_репозитория>
-cd <название_папки>
+git clone https://github.com/danilfg/course_qa_manual_rabbitmq.git
+cd course_qa_manual_rabbitmq
 ```
 
 ### 2️⃣ Запустите контейнеры

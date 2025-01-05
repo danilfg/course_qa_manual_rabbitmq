@@ -16,7 +16,6 @@ services:
       - "15671:15671"
       - "15672:15672"
       - "25672:25672"
-      - 
 
   rabbit2:
     image: rabbitmq:3-management

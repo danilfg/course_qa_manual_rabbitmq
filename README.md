@@ -33,7 +33,12 @@ git clone https://github.com/danilfg/course_qa_manual_rabbitmq.git
 cd course_qa_manual_rabbitmq
 ```
 
-### 2️⃣ Запустите контейнеры
+### 2️⃣ Создайте сеть
+```
+docker network create rabbitmq-cluster
+```
+ 
+### 3️⃣ Запустите контейнеры
 ```bash
 docker-compose up -d
 ```
@@ -41,6 +46,7 @@ docker-compose up -d
 - После запуска:
   - **Порт 15672**: Веб-интерфейс Management UI.
   - **Порт 15671**: AMQP over SSL (по умолчанию).
+
 
 ---
 

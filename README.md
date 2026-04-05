@@ -1,60 +1,108 @@
-# 🐰 RabbitMQ Cluster с Docker Compose
+# 🐰 RabbitMQ Cluster with Docker Compose
 
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Cluster-orange?style=flat-square&logo=rabbitmq)
-![Docker](https://img.shields.io/badge/Docker-Compose-blue?style=flat-square&logo=docker)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Cluster-orange?style=flat-square\&logo=rabbitmq)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue?style=flat-square\&logo=docker)
 ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square)
-
-## 📜 Описание
-
-Этот репозиторий предоставляет конфигурацию для развёртывания RabbitMQ-кластера с использованием **Docker Compose**. 
-
-### 🗂 Основные файлы:
-- **`docker-compose.yml`**:
-  - Запускает контейнеры RabbitMQ и подключает к ним файлы конфигурации.
-- **`rabbitmq.config`**:
-  - Устанавливает основные настройки RabbitMQ:
-    - Кластеризация.
-    - Настройка портов.
-    - Включение необходимых плагинов.
-- **`definitions.json`**:
-  - Создаёт предварительно настроенные структуры RabbitMQ:
-    - Очереди.
-    - Exchange.
-    - Пользователи.
-    - Связи (bindings).
 
 ---
 
-## 🚀 Быстрый старт
+# 📜 Description
 
-### 1️⃣ Склонируйте репозиторий
+This repository provides a configuration for deploying a **RabbitMQ cluster using Docker Compose**.
+
+### 🗂 Main Files
+
+* **`docker-compose.yml`**
+
+  * Starts RabbitMQ containers and connects configuration files.
+
+* **`rabbitmq.config`**
+
+  * Configures RabbitMQ settings including:
+  * clustering
+  * port configuration
+  * enabling required plugins
+
+* **`definitions.json`**
+
+  * Creates predefined RabbitMQ structures:
+  * queues
+  * exchanges
+  * users
+  * bindings
+
+---
+
+# 💻 Recommended Hardware
+
+Running a RabbitMQ cluster in Docker requires sufficient system resources.
+
+### Minimum requirements
+
+| Resource | Minimum         |
+| -------- | --------------- |
+| CPU      | 2 cores         |
+| RAM      | 2 GB            |
+| Disk     | 5 GB free space |
+
+The cluster will run, but performance may be limited under load.
+
+### Recommended configuration
+
+| Resource | Recommended       |
+| -------- | ----------------- |
+| CPU      | 4 cores           |
+| RAM      | 4–8 GB            |
+| Disk     | 10+ GB free space |
+
+If you are using **Docker Desktop**, it is recommended to allocate:
+
+```
+Memory: 4–6 GB
+CPUs: 3–4
+```
+
+This ensures that RabbitMQ nodes and the Management UI run smoothly.
+
+---
+
+# 🚀 Quick Start
+
+### 1️⃣ Clone the repository
+
 ```bash
 git clone https://github.com/danilfg/course_qa_manual_rabbitmq.git
 cd course_qa_manual_rabbitmq
 ```
 
-### 2️⃣ Создайте сеть
+---
+
+### 2️⃣ Create the Docker network
+
 ```
 docker network create rabbitmq-cluster
 ```
- 
-### 3️⃣ Запустите контейнеры
+
+---
+
+### 3️⃣ Start the containers
+
 ```bash
 docker-compose up -d
 ```
 
-- После запуска:
-  - **Порт 15672**: Веб-интерфейс Management UI.
-  - **Порт 15671**: AMQP over SSL (по умолчанию).
+After startup:
 
+* **Port 15672** — RabbitMQ Management UI
+* **Port 15671** — AMQP over SSL
 
 ---
 
-## 🔧 Взаимодействие с RabbitMQ
+# 🔧 Working with RabbitMQ
 
-### **1. Проверка информации об очереди**
+### 1️⃣ Check queue information
 
-Чтобы получить данные об очереди `q.user.created`:
+To retrieve information about the queue `q.user.created`:
 
 ```bash
 curl -u guest:guest -X GET \
@@ -63,9 +111,9 @@ curl -u guest:guest -X GET \
 
 ---
 
-### **2. Отправка сообщения в очередь**
+### 2️⃣ Send a message to the queue
 
-Для отправки сообщения в очередь `q.user.created` используйте следующий `curl` запрос:
+To publish a message to `q.user.created`:
 
 ```bash
 curl -u guest:guest -X POST \
@@ -81,9 +129,9 @@ curl -u guest:guest -X POST \
 
 ---
 
-### **3. Повторная проверка информации об очереди**
+### 3️⃣ Check queue again
 
-После отправки сообщения снова проверьте состояние очереди:
+After sending a message you can check the queue again:
 
 ```bash
 curl -u guest:guest -X GET \
@@ -92,9 +140,9 @@ curl -u guest:guest -X GET \
 
 ---
 
-### **4. Чтение сообщения из очереди**
+### 4️⃣ Read a message from the queue
 
-Чтобы получить сообщение из очереди `q.user.created`, используйте команду:
+To retrieve a message from `q.user.created`:
 
 ```bash
 curl -u guest:guest -X POST \
@@ -108,46 +156,83 @@ curl -u guest:guest -X POST \
       }'
 ```
 
-- **`count`**: Количество сообщений для чтения (в данном случае `1`).
-- **`ackmode`**:
-  - `ack_requeue_false`: Сообщение будет удалено после чтения.
-  - `ack_requeue_true`: Сообщение останется в очереди.
-- **`truncate`**: Максимальный размер сообщения в байтах.
+Explanation:
+
+* **count** — number of messages to read
+* **ackmode**
+
+  * `ack_requeue_false` → message removed after reading
+  * `ack_requeue_true` → message remains in queue
+* **truncate** — maximum message size returned
 
 ---
 
-## 🖥 Management UI
+# 🖥 RabbitMQ Management UI
 
-После запуска контейнеров веб-интерфейс RabbitMQ доступен по адресу:
-- 🌐 [http://localhost:15672](http://localhost:15672)
-- 🔑 Логин: `guest`
-- 🔑 Пароль: `guest`
+After starting the containers, the RabbitMQ web interface is available at:
 
----
+🌐 [http://localhost:15672](http://localhost:15672)
 
-## ⚙️ Логика работы
+Credentials:
 
-1. **Настройка RabbitMQ**:
-   - При запуске контейнера используется файл `definitions.json`, который автоматически создаёт структуру:
-     - Очередь: `q.user.created`.
-     - Exchange: `amq.default`.
-     - Пользователи и права доступа.
-
-2. **Взаимодействие с RabbitMQ**:
-   - С помощью Management UI или HTTP API вы можете отправлять, получать и управлять сообщениями.
+```
+username: guest
+password: guest
+```
 
 ---
 
-## 💡 Заключение
+# ⚙️ How It Works
 
-Этот проект предоставляет готовую настройку RabbitMQ-кластера с возможностью:
-- 📦 Быстрого развёртывания.
-- 🛠 Управления через API и веб-интерфейс.
-- 🌀 Лёгкой настройки кластеризации и автоматизации.
+### RabbitMQ Initialization
+
+When the container starts, the `definitions.json` file automatically creates:
+
+* queue `q.user.created`
+* exchange `amq.default`
+* users and permissions
 
 ---
 
-## 🤝 Контакты
-Если у вас есть вопросы или предложения, создайте **Issue** в репозитории! 😊
+### Interacting with RabbitMQ
 
-![GitHub](https://img.shields.io/badge/GitHub-Contribute-blue?style=flat-square&logo=github)
+You can interact with RabbitMQ using:
+
+* the Management UI
+* the HTTP API
+* automation tools
+* testing tools
+
+---
+
+# 💡 Summary
+
+This project provides a ready-to-run RabbitMQ cluster that allows:
+
+* 📦 quick deployment
+* 🛠 interaction via API and web interface
+* 🌀 easy experimentation with messaging and clustering
+
+It is useful for **learning event-driven architectures and testing message-based systems**.
+
+---
+
+# 👨‍🏫 Author
+
+**Daniil Nikolaev**
+
+QA Automation & DevOps Engineer
+Creator of open-source testing platforms
+Mentor in software testing and automation
+Consulting companies on test automation frameworks and CI/CD infrastructure
+
+Telegram
+[https://t.me/danilfg](https://t.me/danilfg)
+
+---
+
+# 🤝 Contributing
+
+If you have suggestions or improvements, feel free to open an **Issue** or submit a **Pull Request**.
+
+![GitHub](https://img.shields.io/badge/GitHub-Contribute-blue?style=flat-square\&logo=github)
